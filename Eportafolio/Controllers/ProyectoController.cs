@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -46,10 +47,21 @@ namespace Eportafolio.Controllers
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Nombre,Descripcion,Imagen,Empresa,Fecha")] Proyectos proyectos)
+        public ActionResult Create([Bind(Include = "Id,Nombre,Descripcion,Imagen,Empresa,Fecha")] Proyectos proyectos, HttpPostedFileBase ImagenFile)
         {
             if (ModelState.IsValid)
             {
+                if (ImagenFile != null && ImagenFile.ContentLength > 0)
+                {
+                    var filename = Path.GetFileName(ImagenFile.FileName);
+                    var path = Path.Combine(Server.MapPath("~/Content/img/"), filename);
+
+                    ImagenFile.SaveAs(path);
+
+                    proyectos.Imagen = filename;
+
+                }
+
                 db.Proyectos.Add(proyectos);
                 db.SaveChanges();
                 return RedirectToAction("Index");

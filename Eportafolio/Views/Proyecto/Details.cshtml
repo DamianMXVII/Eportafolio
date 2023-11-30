@@ -31,8 +31,8 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Imagen)
-        </dd>
+            <img src="@Url.Content($"~/Content/Img/{Model.Imagen}")" alt="Imagen" />
+        </dd>        
 
         <dt>
             @Html.DisplayNameFor(model => model.Empresa)
